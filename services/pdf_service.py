@@ -120,17 +120,28 @@ def extract_pdf_pages(
     return len(selected_pages)
 
 
-def compress_pdf(source: BinaryIO, destination: Path) -> tuple[int, int, int]:
+def compress_pdf(
+    source: BinaryIO,
+    destination: Path,
+    compression_level: str = "balanced",
+) -> tuple[int, int, int]:
+    if compression_level not in {"balanced", "strong", "maximum"}:
+        raise PdfProcessingError("Choose a valid PDF compression level.")
     reader = _read_pdf(source)
     writer = PdfWriter()
     try:
         writer.append(reader)
         for page in writer.pages:
             page.compress_content_streams()
-        writer.compress_identical_objects(
-            remove_duplicates=True,
-            remove_unreferenced=True,
-        )
+        if compression_level in {"strong", "maximum"}:
+            writer.compress_identical_objects(
+                remove_duplicates=True,
+                remove_unreferenced=True,
+            )
+        if compression_level == "maximum":
+            writer.remove_links()
+            writer.remove_annotations(None)
+            writer.add_metadata({})
         destination.parent.mkdir(parents=True, exist_ok=True)
         with destination.open("wb") as output_file:
             writer.write(output_file)

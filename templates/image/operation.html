@@ -41,14 +41,18 @@
           data-file-status="operation-file-details"
           required>
       </label>
-      <p class="file-details" id="operation-file-details" role="status" aria-live="polite" hidden></p>
+      <div class="file-selection-row">
+        <p class="file-details" id="operation-file-details" role="status" aria-live="polite" hidden></p>
+        <button class="button-secondary file-clear-button" type="button" data-clear-file hidden>Clear</button>
+      </div>
 
       {% if operation.quality %}
-      <label class="field-label operation-field" for="quality">
-        Quality (1–100)
-        <input class="operation-text-input" id="quality" name="quality" type="number" min="1" max="100" value="85" required>
-      </label>
-      <p class="field-help">Lower values make smaller files. PNG uses this setting to trade file size against encoding speed.</p>
+      <label class="field-label operation-field" for="quality">Image quality</label>
+      <div class="quality-control">
+        <input id="quality" name="quality" type="range" min="1" max="100" value="85" required>
+        <output id="quality-output" for="quality">85%</output>
+      </div>
+      <p class="field-help">Lower values make smaller files; higher values preserve more detail.</p>
       {% endif %}
 
       {% if operation.format %}

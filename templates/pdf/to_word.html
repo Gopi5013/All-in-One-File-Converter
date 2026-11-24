@@ -27,7 +27,7 @@
       <label class="field-label" for="pdf-word-file">Choose a PDF</label>
       <label class="upload-dropzone" id="pdf-word-dropzone" for="pdf-word-file">
         <span class="upload-symbol" aria-hidden="true">↑</span>
-        <span class="upload-title">Drop a PDF here or <strong>browse</strong></span>
+        <span class="upload-title" id="pdf-word-upload-title">Drop a PDF here or <strong>browse</strong></span>
         <span class="upload-hint">PDF · up to {{ max_upload_mb }} MB</span>
         <input
           class="visually-hidden"
@@ -38,6 +38,7 @@
           required>
       </label>
       <p class="file-details" id="pdf-word-file-details" hidden></p>
+      <button class="button-secondary file-clear-button" id="pdf-word-clear" type="button" hidden>Clear</button>
 
       <div class="resize-actions">
         <button class="button-primary" id="pdf-word-submit" type="submit">Convert to Word</button>

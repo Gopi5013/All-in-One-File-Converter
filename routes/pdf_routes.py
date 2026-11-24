@@ -42,11 +42,12 @@ PDF_OPERATIONS = {
     },
     "compress-pdf": {
         "title": "Compress PDF",
-        "description": "Optimize PDF content streams and remove duplicate objects where possible.",
+        "description": "Choose a compression level to optimize PDF content streams and unnecessary objects.",
         "button": "Compress PDF",
         "accept": ".pdf,application/pdf",
         "ranges": False,
         "rotation": False,
+        "compression": True,
     },
     "extract-pdf-pages": {
         "title": "Extract PDF pages",
@@ -454,11 +455,13 @@ def compress_pdf_page():
             error="Choose a PDF file before compressing.",
             status=400,
         )
+    compression_level = request.form.get("compression_level", "balanced")
     result_id, output_path = _pdf_output(operation)
     try:
         page_count, input_size, output_size = compress_pdf(
             uploaded_file.stream,
             output_path,
+            compression_level,
         )
     except PdfProcessingError as error:
         output_path.unlink(missing_ok=True)

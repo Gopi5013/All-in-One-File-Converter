@@ -534,6 +534,15 @@ input:focus-visible {
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
+.tool-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tool-card-link:hover {
+  color: inherit;
+}
+
 .tool-card:hover {
   border-color: #aeb8c5;
   box-shadow: 0 5px 14px rgb(32 42 56 / 6%);
@@ -599,12 +608,11 @@ input:focus-visible {
   font-weight: 650;
 }
 
-.tool-card-footer[href] {
+.tool-card-link .tool-card-footer {
   color: var(--blue);
-  text-decoration: none;
 }
 
-.tool-card-footer[href]:hover {
+.tool-card-link:hover .tool-card-footer {
   text-decoration: underline;
 }
 
@@ -736,6 +744,22 @@ input:focus-visible {
   overflow-wrap: anywhere;
 }
 
+.file-selection-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.file-selection-row .file-details {
+  flex: 1;
+}
+
+.file-clear-button {
+  min-height: 36px;
+  margin-top: 0.65rem;
+  padding: 0.4rem 0.75rem;
+}
+
 .image-preview {
   display: grid;
   min-height: 140px;
@@ -808,6 +832,26 @@ input:focus-visible {
 
 .operation-select {
   max-width: 24rem;
+}
+
+.quality-control {
+  display: flex;
+  max-width: 24rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.quality-control input {
+  width: 100%;
+  accent-color: var(--blue);
+}
+
+.quality-control output {
+  min-width: 3.5rem;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 750;
+  text-align: right;
 }
 
 .aspect-ratio-option {

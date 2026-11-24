@@ -27,7 +27,7 @@
       <label class="field-label" for="pdf-files">Choose PDF files</label>
       <label class="upload-dropzone" id="pdf-dropzone" for="pdf-files">
         <span class="upload-symbol" aria-hidden="true">↑</span>
-        <span class="upload-title">Drop PDF files here or <strong>browse</strong></span>
+        <span class="upload-title" id="pdf-upload-title">Drop PDF files here or <strong>browse</strong></span>
         <span class="upload-hint">PDF · 2 to {{ max_pdf_files }} files · up to {{ max_upload_mb }} MB total</span>
         <input
           class="visually-hidden"
@@ -38,6 +38,7 @@
           multiple
           required>
       </label>
+      <button class="button-secondary file-clear-button" id="pdf-clear-selection" type="button" hidden>Clear</button>
 
       <div class="selected-files-heading">
         <h2>Merge order</h2>

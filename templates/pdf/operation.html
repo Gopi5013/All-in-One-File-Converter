@@ -71,7 +71,10 @@
           required>
       </label>
       {% endif %}
-      <p class="file-details" id="operation-file-details" role="status" aria-live="polite" hidden></p>
+      <div class="file-selection-row">
+        <p class="file-details" id="operation-file-details" role="status" aria-live="polite" hidden></p>
+        <button class="button-secondary file-clear-button" type="button" data-clear-file hidden>Clear</button>
+      </div>
 
       {% if operation.ranges %}
       <label class="field-label operation-field" for="page-ranges">Page numbers or ranges</label>
@@ -94,6 +97,16 @@
         <option value="180">180°</option>
         <option value="270">270° clockwise</option>
       </select>
+      {% endif %}
+
+      {% if operation.compression %}
+      <label class="field-label operation-field" for="compression-level">Compression level</label>
+      <select class="operation-select" id="compression-level" name="compression_level" required>
+        <option value="balanced">Balanced — preserve document features</option>
+        <option value="strong">Strong — remove duplicate objects</option>
+        <option value="maximum">Maximum — also remove links, annotations, and metadata</option>
+      </select>
+      <p class="field-help">Maximum compression can remove bookmarks and other interactive document content.</p>
       {% endif %}
 
       <div class="resize-actions">

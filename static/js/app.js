@@ -1,5 +1,16 @@
 const searchInput = document.querySelector("#tool-search");
 
+for (const qualityInput of document.querySelectorAll("#quality")) {
+  const output = document.querySelector("#quality-output");
+  const updateQuality = () => {
+    if (output) {
+      output.textContent = `${qualityInput.value}%`;
+    }
+  };
+  qualityInput.addEventListener("input", updateQuality);
+  updateQuality();
+}
+
 if (searchInput) {
   const toolCards = [...document.querySelectorAll("[data-tool-card]")];
   const categories = [...document.querySelectorAll("[data-tool-category]")];
@@ -62,9 +73,17 @@ if (searchInput) {
 for (const fileInput of document.querySelectorAll("input[type='file'][data-file-status]")) {
   const fileDetails = document.getElementById(fileInput.dataset.fileStatus);
   const dropZone = fileInput.closest(".upload-dropzone");
+  const uploadTitle = dropZone.querySelector(".upload-title");
+  const initialPrompt = uploadTitle.textContent;
+  const clearButton = fileInput.form.querySelector("[data-clear-file]");
   const form = fileInput.form;
 
   function showSelectedFiles(files) {
+    const hasFiles = files.length > 0;
+    uploadTitle.textContent = hasFiles
+      ? fileInput.multiple ? "Choose another selection" : "Choose another file"
+      : initialPrompt;
+    clearButton.hidden = !hasFiles;
     if (!files.length) {
       fileDetails.textContent = "";
       fileDetails.hidden = true;
@@ -80,6 +99,11 @@ for (const fileInput of document.querySelectorAll("input[type='file'][data-file-
   }
 
   fileInput.addEventListener("change", () => {
+    showSelectedFiles(fileInput.files);
+  });
+
+  clearButton.addEventListener("click", () => {
+    fileInput.value = "";
     showSelectedFiles(fileInput.files);
   });
 
@@ -120,8 +144,11 @@ if (resizeForm) {
   const fileDetails = document.querySelector("#file-details");
   const preview = document.querySelector("#image-preview");
   const previewImage = document.querySelector("#image-preview-content");
+  const uploadTitle = document.querySelector("#image-upload-title");
+  const clearButton = document.querySelector("#image-clear");
   const submitButton = document.querySelector("#resize-submit");
   const processingStatus = document.querySelector("#processing-status");
+  const initialUploadPrompt = uploadTitle.innerHTML;
   let previewUrl = null;
 
   function clearPreview() {
@@ -135,6 +162,8 @@ if (resizeForm) {
     preview.hidden = true;
     fileDetails.textContent = "";
     fileDetails.hidden = true;
+    uploadTitle.innerHTML = initialUploadPrompt;
+    clearButton.hidden = true;
   }
 
   function showPreview(file) {
@@ -145,6 +174,8 @@ if (resizeForm) {
 
     fileDetails.textContent = `${file.name} · ${(file.size / (1024 * 1024)).toFixed(2)} MB`;
     fileDetails.hidden = false;
+    uploadTitle.textContent = "Choose another image";
+    clearButton.hidden = false;
     previewUrl = URL.createObjectURL(file);
     previewImage.src = previewUrl;
     previewImage.alt = `Preview of ${file.name}`;
@@ -153,6 +184,11 @@ if (resizeForm) {
 
   imageInput.addEventListener("change", () => {
     showPreview(imageInput.files[0]);
+  });
+
+  clearButton.addEventListener("click", () => {
+    imageInput.value = "";
+    showPreview(null);
   });
 
   for (const eventName of ["dragenter", "dragover"]) {
@@ -208,6 +244,9 @@ if (mergeForm) {
   const dropZone = document.querySelector("#pdf-dropzone");
   const fileList = document.querySelector("#pdf-file-list");
   const fileSummary = document.querySelector("#pdf-file-summary");
+  const uploadTitle = document.querySelector("#pdf-upload-title");
+  const clearSelectionButton = document.querySelector("#pdf-clear-selection");
+  const initialUploadPrompt = uploadTitle.innerHTML;
   const submitButton = document.querySelector("#merge-submit");
   const processingStatus = document.querySelector("#merge-processing-status");
   let selectedFiles = [];
@@ -222,6 +261,12 @@ if (mergeForm) {
 
   function renderFileList() {
     fileList.replaceChildren();
+    const hasFiles = selectedFiles.length > 0;
+    uploadTitle.textContent = hasFiles ? "Choose another selection" : "";
+    if (!hasFiles) {
+      uploadTitle.innerHTML = initialUploadPrompt;
+    }
+    clearSelectionButton.hidden = !hasFiles;
     fileSummary.textContent = selectedFiles.length
       ? `${selectedFiles.length} ${selectedFiles.length === 1 ? "PDF" : "PDFs"} selected.`
       : "No files selected.";
@@ -296,6 +341,10 @@ if (mergeForm) {
     updateSelectedFiles(pdfInput.files);
   });
 
+  clearSelectionButton.addEventListener("click", () => {
+    updateSelectedFiles([]);
+  });
+
   for (const eventName of ["dragenter", "dragover"]) {
     dropZone.addEventListener(eventName, (event) => {
       event.preventDefault();
@@ -339,18 +388,31 @@ if (pdfToWordForm) {
   const pdfInput = document.querySelector("#pdf-word-file");
   const dropZone = document.querySelector("#pdf-word-dropzone");
   const fileDetails = document.querySelector("#pdf-word-file-details");
+  const uploadTitle = document.querySelector("#pdf-word-upload-title");
+  const clearButton = document.querySelector("#pdf-word-clear");
+  const initialUploadPrompt = uploadTitle.innerHTML;
   const submitButton = document.querySelector("#pdf-word-submit");
   const processingStatus = document.querySelector("#pdf-word-processing-status");
 
   function showSelectedFile(file) {
+    uploadTitle.textContent = file ? "Choose another PDF" : "";
+    if (!file) {
+      uploadTitle.innerHTML = initialUploadPrompt;
+    }
     fileDetails.textContent = file
       ? `${file.name} · ${(file.size / (1024 * 1024)).toFixed(2)} MB`
       : "";
     fileDetails.hidden = !file;
+    clearButton.hidden = !file;
   }
 
   pdfInput.addEventListener("change", () => {
     showSelectedFile(pdfInput.files[0]);
+  });
+
+  clearButton.addEventListener("click", () => {
+    pdfInput.value = "";
+    showSelectedFile(null);
   });
 
   for (const eventName of ["dragenter", "dragover"]) {

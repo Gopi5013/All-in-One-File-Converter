@@ -132,6 +132,19 @@ def test_homepage_marks_resizer_as_available(client):
     assert b'href="/tools/resize-image"' in response.data
 
 
+def test_available_tool_cards_link_to_their_tool_pages(client):
+    response = client.get("/")
+    page = response.get_data(as_text=True)
+    tool_urls = re.findall(
+        r'<a\s+class="tool-card tool-card-link"\s+href="([^"]+)"',
+        page,
+    )
+
+    assert response.status_code == 200
+    assert len(tool_urls) == 13
+    assert all(client.get(tool_url).status_code == 200 for tool_url in tool_urls)
+
+
 def test_unsupported_extension_is_rejected(client):
     response = post_resize(client, file=image_file(), filename="sample.gif")
 

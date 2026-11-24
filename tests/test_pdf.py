@@ -373,6 +373,23 @@ def test_compress_pdf_returns_a_readable_document(client):
     assert len(PdfReader(BytesIO(download.data), strict=True).pages) == 2
 
 
+@pytest.mark.parametrize("compression_level", ["balanced", "strong", "maximum"])
+def test_compress_pdf_accepts_custom_compression_level(client, compression_level):
+    response = client.post(
+        "/tools/compress-pdf",
+        data={
+            "pdf": (pdf_file(((100, 200),)), "source.pdf"),
+            "compression_level": compression_level,
+        },
+        content_type="multipart/form-data",
+    )
+
+    assert response.status_code == 200
+    download = client.get(operation_download_url(response, "compress-pdf"))
+    assert download.status_code == 200
+    assert len(PdfReader(BytesIO(download.data), strict=True).pages) == 1
+
+
 def test_extract_pdf_pages_returns_only_selected_pages(client):
     response = client.post(
         "/tools/extract-pdf-pages",

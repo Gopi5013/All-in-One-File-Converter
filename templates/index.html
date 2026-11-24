@@ -49,11 +49,21 @@
           </div>
           <div class="tool-grid">
             {% for tool in category.tools %}
+            {% if tool.get("endpoint") %}
+            <a
+              class="tool-card tool-card-link"
+              href="{{ url_for(tool.endpoint) }}"
+              aria-label="{{ tool.name }}: {{ tool.description }} — Open tool"
+              data-tool-card
+              data-category="{{ category.id }}"
+              data-search="{{ tool.name }} {{ tool.description }} {{ tool.keywords }} {{ category.name }}">
+            {% else %}
             <article
               class="tool-card"
               data-tool-card
               data-category="{{ category.id }}"
               data-search="{{ tool.name }} {{ tool.description }} {{ tool.keywords }} {{ category.name }}">
+            {% endif %}
               <div class="tool-card-top">
                 <span class="tool-icon tool-icon-{{ category.id }}" aria-hidden="true">{{ tool.icon }}</span>
                 <span class="tool-status">{{ "Available" if tool.get("endpoint") else "Coming soon" }}</span>
@@ -61,11 +71,15 @@
               <h3>{{ tool.name }}</h3>
               <p>{{ tool.description }}</p>
               {% if tool.get("endpoint") %}
-              <a class="tool-card-footer" href="{{ url_for(tool.endpoint) }}">Open tool <span aria-hidden="true">↗</span></a>
+              <span class="tool-card-footer">Open tool <span aria-hidden="true">↗</span></span>
               {% else %}
               <span class="tool-card-footer">Document Tools</span>
               {% endif %}
+            {% if tool.get("endpoint") %}
+            </a>
+            {% else %}
             </article>
+            {% endif %}
             {% endfor %}
           </div>
         </section>
